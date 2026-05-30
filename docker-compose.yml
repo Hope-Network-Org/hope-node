@@ -1,0 +1,37 @@
+# Hope testnet peer — pull the published image (no chain repo required).
+# Usage: docker compose --env-file .env up -d
+services:
+  hope-peer:
+    image: ${HOPE_PEER_IMAGE:-public.ecr.aws/r8k0t0l9/hope-peer:testnet}
+    platform: ${DOCKER_PLATFORM:-}
+    container_name: hope-peer
+    restart: unless-stopped
+    stop_grace_period: 30s
+    ports:
+      - "26656:26656"
+      - "26657:26657"
+    volumes:
+      - hope-peer-data:/home/hope/.hope
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/peer-healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 900s
+    environment:
+      CHAIN_ID: ${CHAIN_ID:-hope-testnet-2}
+      MONIKER: ${MONIKER:-hope-peer}
+      CHAIN_METADATA_URL: https://test-gateway.hopenetwork.io/chain.json
+      SEEDS: ${SEEDS:-}
+      PERSISTENT_PEERS: ${PERSISTENT_PEERS:-}
+      STATE_SYNC: ${STATE_SYNC:-true}
+      PAYOUT_RECIPIENT: ${PAYOUT_RECIPIENT:-}
+      HOPE_OPERATOR_MNEMONIC: ${HOPE_OPERATOR_MNEMONIC:-}
+      NODE_LABEL: ${NODE_LABEL:-docker-peer}
+      EXTERNAL_ADDRESS: ${EXTERNAL_ADDRESS:-}
+      AUTO_DETECT_EXTERNAL_ADDRESS: ${AUTO_DETECT_EXTERNAL_ADDRESS:-true}
+      RPC_URL: ${RPC_URL:-}
+
+volumes:
+  hope-peer-data:
+    name: hope-peer-data
