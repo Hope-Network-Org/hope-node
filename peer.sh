@@ -157,14 +157,11 @@ cmd_register() {
   docker exec "$cid" /usr/local/bin/register-incentives.sh
 }
 
-cmd_heartbeat() {
+cmd_sync_proof() {
   local cid
   cid="$(container_id)"
   [[ -n "$cid" ]] || { echo "Start peer first: ./peer.sh up"; exit 1; }
-  docker exec "$cid" bash -c '
-    source /usr/local/bin/incentives-common.sh
-    hope_tx_wait incentives heartbeat --from operator $(fee_granter_args)
-  '
+  docker exec "$cid" /usr/local/bin/submit-sync-proof.sh
 }
 
 cmd_shell() {
@@ -192,7 +189,7 @@ Hope testnet peer (Docker)
   ./peer.sh resync     Wipe data + state-sync (fast catch-up)
   ./peer.sh reset      Wipe chain data; blocksync from genesis
   ./peer.sh register   Manual incentives register
-  ./peer.sh heartbeat  Send one heartbeat tx
+  ./peer.sh sync-proof Submit one sync proof tx
   ./peer.sh shell      Shell inside container
 
 Setup: cp .env.example .env  (optional HOPE_OPERATOR_MNEMONIC for incentives)
@@ -214,7 +211,7 @@ case "${1:-}" in
   reset) cmd_reset ;;
   resync) cmd_resync ;;
   register) cmd_register ;;
-  heartbeat) cmd_heartbeat ;;
+  sync-proof) cmd_sync_proof ;;
   shell) cmd_shell ;;
   -h|--help|help|"") usage ;;
   *) echo "Unknown command: $1"; usage; exit 1 ;;

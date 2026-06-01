@@ -19,8 +19,13 @@ Environment variables for `docker-compose.yml` / `.env`.
 | `MONIKER` | `hope-peer` | Node name in logs |
 | `CHAIN_METADATA_URL` | `https://test-gateway.hopenetwork.io/chain.json` | Seeds, genesis URL |
 | `STATE_SYNC` | `true` | Fast bootstrap via state sync |
+| `FORCE_STATE_SYNC` | `false` | Wipe block store and state-sync on start |
+| `STATE_SYNC_RPC` | `3.21.91.67:26657` | Host:port RPC with snapshots (not HTTPS `/rpc`) |
+| `STATE_SYNC_RPC_URL` | gateway HTTPS `/rpc` | Used for trust height/hash lookup |
 | `SEEDS` | *(from chain.json)* | Comma-separated seed nodes |
 | `PERSISTENT_PEERS` | *(from chain.json)* | Persistent validator peers |
+
+State sync needs a reachable **host:port** CometBFT RPC (26657). The HTTPS gateway URL is used for status queries only. If first boot hangs at height 0, set `STATE_SYNC_RPC=3.21.91.67:26657` and run `./peer.sh resync`.
 
 Override peers only if directed by Hope Network ops.
 
@@ -55,16 +60,17 @@ When `HOPE_OPERATOR_MNEMONIC` is set, these are **automatically enabled** inside
 
 - `AUTO_REGISTER_INCENTIVES`
 - `AUTO_CLAIM_PEER_GRANT`
-- `AUTO_HEARTBEAT`
 - `AUTO_SYNC_PROOF`
 - `AUTO_UPDATE_ENDPOINTS`
 
-Optional tuning (defaults shown):
+Testnet eligibility is **sync-proof only** — heartbeats are not used. `AUTO_HEARTBEAT` defaults to `false` and should stay off.
+
+Optional tuning:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `HEARTBEAT_INTERVAL_SEC` | `300` | Heartbeat every 5 min |
-| `SYNC_PROOF_INTERVAL_SEC` | `7200` | Sync proof every 2 h |
+| `SYNC_PROOF_INTERVAL_SEC` | `7200` | Sync proof every 2 h (matches chain `sync_proof_min_interval`) |
+| `AUTO_HEARTBEAT` | `false` | Legacy; not required on current testnet |
 
 ---
 
@@ -72,7 +78,6 @@ Optional tuning (defaults shown):
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `FORCE_STATE_SYNC` | `false` | Force state sync on restart |
 | `HOPE_TX_NODE` | local after sync | RPC for broadcasting txs |
 | `HOPE_API_URL` | test-gateway API | Used by status scripts |
 
@@ -103,6 +108,7 @@ RPC_URL=http://203.0.113.10:26657
 ```bash
 HOPE_OPERATOR_MNEMONIC="..."
 NODE_LABEL=vps-frankfurt-1
+STATE_SYNC_RPC=3.21.91.67:26657
 # EXTERNAL_ADDRESS auto-detected
 ```
 

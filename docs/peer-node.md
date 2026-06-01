@@ -23,7 +23,7 @@ docker run -d --name hope-peer --restart unless-stopped \
 
 - Full chain state (query locally at `http://127.0.0.1:26657`)
 - P2P participation (helps propagate blocks)
-- No operator key, no on-chain registration, no heartbeats
+- No operator key, no on-chain registration, no sync proofs
 
 ## Check sync
 

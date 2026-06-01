@@ -33,7 +33,21 @@ sudo lsof -i :26656 -i :26657
 ./peer.sh resync
 ```
 
-**Peer connection timeouts:** Normal if one seed is unreachable; node should connect via validator persistent peers from chain.json.
+**Peer connection timeouts:** Normal if one seed is unreachable; the node connects via validator persistent peers from chain.json.
+
+**Stuck at height 0:** State sync needs a reachable **host:port** RPC with snapshots — not the HTTPS gateway alone. Add to `.env`:
+
+```bash
+STATE_SYNC_RPC=3.21.91.67:26657
+```
+
+Then:
+
+```bash
+./peer.sh resync
+```
+
+P2P timeouts to seed/gateway during first boot are common; RPC state sync still works when `STATE_SYNC_RPC` is set correctly.
 
 ---
 

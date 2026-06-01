@@ -65,7 +65,7 @@ Sync and registration work without public ports; **daily payout eligibility** re
 To run with incentives you need a **BIP-39 24-word mnemonic** using the **standard English wordlist**.
 
 - Generate with any BIP-39 tool or `hoped keys add ...` on a secure machine
-- Store offline; treat as a **hot operator key** (signs heartbeats/proofs)
+- Store offline; treat as a **hot operator key** (signs sync proofs and registration msgs)
 - Invalid words → container exits with `invalid mnemonic`
 
 You do **not** need uhope in the wallet before registration. The chain sponsors the first transactions via `claim-peer-grant`.
@@ -79,7 +79,9 @@ You do **not** need uhope in the wallet before registration. The chain sponsors 
 | Chain ID | `hope-testnet-2` |
 | Denom | `uhope` |
 | Gateway RPC | `https://test-gateway.hopenetwork.io/rpc` |
+| State-sync RPC | `3.21.91.67:26657` (host:port; default in compose) |
 | Chain metadata | `https://test-gateway.hopenetwork.io/chain.json` |
 | Docker image | `public.ecr.aws/r8k0t0l9/hope-peer:testnet` |
+| Eligibility | ≥ 11 sync-proof hours / 12 slots (24h window); proofs every ~2h |
 
 No manual genesis download or peer list configuration is required — the container loads everything from chain metadata on first start.

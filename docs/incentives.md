@@ -56,27 +56,26 @@ Records on chain:
 - `rpc_url` (public IP:26657)
 - Label and payout recipient
 
-### 3. Heartbeat (every 5 minutes)
+### 3. Sync proof (every 2 hours)
 
-Keeps `last_heartbeat` fresh. Testnet eligibility uses sync proofs primarily; heartbeats support reliability scoring.
-
-### 4. Sync proof (every 2 hours)
-
-Submits verified block height + app hash. Required for **proof-only** liveness mode on testnet.
+Submits verified block height + app hash. Required for **proof-only** liveness mode on testnet. **No heartbeat txs** — sync proofs alone determine eligibility and reliability.
 
 ---
 
 ## Eligibility (testnet)
 
-Current testnet uses **proof-only** liveness (`PEER_LIVENESS_MODE_PROOF_ONLY`). Roughly:
+Current testnet uses **proof-only** liveness (`PEER_LIVENESS_MODE_PROOF_ONLY`). Heartbeats are **disabled** — sync proofs alone determine eligibility and reliability.
 
 | Requirement | Typical testnet value |
 |-------------|----------------------|
 | Registered & active | Yes |
-| Synced locally | Height within ~50 blocks of gateway |
-| Sync-proof healthy hours | ≥ 1 hour in 24h rolling window |
-| Height lag vs verified | ≤ 1500 blocks |
+| Synced locally | Height within ~100 blocks of gateway at proof time |
+| Sync-proof healthy hours | **≥ 11** of 12 slots in 24h rolling window |
+| Sync proof interval | Every **2 hours** (`sync_proof_min_interval`) |
+| Height lag vs verified | ≤ 100 blocks (grace between proofs) |
 | Public P2P + RPC | Reachable on registered endpoints |
+
+**Reliability** (share of pool) ramps as you sustain healthy sync-proof hours toward 23/24 in the window. EigenTrust weight also affects payout share.
 
 Check progress:
 
@@ -103,7 +102,6 @@ Track payouts on [explorer analytics](https://explorer.hopenetwork.io/analytics/
 
 ```bash
 ./peer.sh register    # Re-run claim + register
-./peer.sh heartbeat   # Single heartbeat tx
 
 docker exec hope-peer /usr/local/bin/register-incentives.sh
 docker exec hope-peer /usr/local/bin/submit-sync-proof.sh

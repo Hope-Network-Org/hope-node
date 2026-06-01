@@ -40,9 +40,9 @@ Your computer downloads and stays up to date with the chain. No wallet or passph
 
 ### 2. Peer node + incentives (earn rewards)
 
-Same as above, plus you register on-chain and can qualify for **daily token rewards** if your node stays online and reachable.
+Same as above, plus you register on-chain and can qualify for **daily token rewards** if your node stays synced, submits **sync proofs every ~2 hours**, and remains reachable on the public internet.
 
-You will need a **24-word recovery phrase** (a standard crypto wallet phrase). The setup handles registration for you once the node is synced.
+You will need a **24-word recovery phrase** (a standard crypto wallet phrase). The setup handles registration and sync proofs for you once the node is synced — no heartbeat transactions on current testnet.
 
 **Running from home?** You may need to open two ports on your router so the network can reach your node. [Port forwarding guide →](docs/port-forwarding.md)
 

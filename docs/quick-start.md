@@ -64,7 +64,7 @@ The container will:
 2. Auto-detect your public IP (VPS/cloud)
 3. Claim peer grant (gas sponsored)
 4. Register on-chain
-5. Start heartbeat + sync proof loops
+5. Submit sync proofs every **2 hours** (no heartbeat txs on testnet)
 
 ### 4. Verify
 
@@ -75,8 +75,10 @@ The container will:
 Look for:
 
 - `AUTO_REGISTER_INCENTIVES=true (effective)`
+- `AUTO_SYNC_PROOF=true`
 - `Registered on chain`
 - `Operator: hope1...`
+- `Sync-proof hours: N / 11` (ramps over ~24h)
 
 View on explorer: [Network analytics](https://explorer.hopenetwork.io/analytics/network)
 
@@ -108,16 +110,21 @@ docker run -d --name hope-peer --restart unless-stopped \
   public.ecr.aws/r8k0t0l9/hope-peer:testnet
 ```
 
-**With incentives:**
+**With incentives (zero-config):**
 
 ```bash
 docker run -d --name hope-peer --restart unless-stopped \
   -p 26656:26656 -p 26657:26657 \
   -v hope-peer-data:/home/hope/.hope \
+  -e FORCE_STATE_SYNC=true \
+  -e STATE_SYNC=true \
+  -e STATE_SYNC_RPC=3.21.91.67:26657 \
   -e HOPE_OPERATOR_MNEMONIC="your twenty four words" \
   -e NODE_LABEL=my-peer \
   public.ecr.aws/r8k0t0l9/hope-peer:testnet
 ```
+
+Mnemonic alone enables claim → register → sync-proof automation. No heartbeat configuration needed.
 
 Status inside container:
 

@@ -20,7 +20,7 @@ Run from the repo root after `chmod +x peer.sh`.
 | `./peer.sh resync` | Wipe blocks + state-sync (fix AppHash) |
 | `./peer.sh reset` | Wipe blocks, blocksync from genesis |
 | `./peer.sh register` | Manual incentives registration |
-| `./peer.sh heartbeat` | Send one heartbeat transaction |
+| `./peer.sh sync-proof` | Submit one sync proof manually |
 | `./peer.sh shell` | Interactive bash inside container |
 
 ---

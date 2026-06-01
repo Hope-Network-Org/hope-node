@@ -22,7 +22,7 @@ The published Docker image bundles a `hoped` binary matched to testnet validator
 │         ▼                                              │
 │  ┌─────────────────────────────────────────────────┐  │
 │  │ incentives automation (background)               │  │
-│  │  claim grant → register → heartbeat → sync proof │  │
+│  │  claim grant → register → sync proof (every 2h)  │  │
 │  └─────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────┘
           │ P2P :26656              │ HTTPS
@@ -36,8 +36,8 @@ The published Docker image bundles a `hoped` binary matched to testnet validator
 
 1. **Init** — create `config.toml`, node key, operator keyring (if mnemonic provided)
 2. **Genesis** — fetch from URL in chain metadata; reset local DB if genesis changed
-3. **Peers** — load seeds + persistent peers from chain.json
-4. **State sync** — snapshot from gateway RPC trust height (default **on**)
+3. **Peers** — load seeds + persistent peers from chain.json (validator fallback if seed P2P is slow)
+4. **State sync** — snapshot via `STATE_SYNC_RPC` host:port (default gateway `3.21.91.67:26657`)
 5. **Public IP** — auto-detect via cloud metadata or ipify (when `AUTO_DETECT_EXTERNAL_ADDRESS=true`)
 6. **Start hoped** — block sync / live sync to head
 
@@ -55,9 +55,10 @@ When `HOPE_OPERATOR_MNEMONIC` is set, the entrypoint enables full automation (no
 | Wait for sync | After RPC up | Height > 1000, drift ≤ 50 blocks |
 | Claim peer grant | Once | Fee-free tx; module feegrant + sponsored bond |
 | Register node | Once | On-chain record with label, node ID, endpoints |
-| Heartbeat | Every 5 min | Keeps node active |
-| Sync proof | Every 2 h | Proves local height matches chain |
+| Sync proof | Every 2 h | Proves local height matches chain (eligibility + reliability) |
 | Update endpoints | If needed | Fixes loopback RPC on chain record |
+
+Testnet uses **proof-only** liveness — the container does **not** send heartbeat transactions.
 
 Incentive transactions broadcast via **local RPC** once synced (reliable; avoids gateway mempool edge cases).
 
@@ -79,7 +80,7 @@ Effective flags are stored in `/home/hope/.hope/config/.automation.env` inside t
 |-------------|-------------------|
 | Docker + ports | Genesis, peers, state sync |
 | Mnemonic (incentives) | Grant claim, registration |
-| Optional cold payout address | Heartbeats, sync proofs |
+| Optional cold payout address | Sync proofs every 2 h |
 | Router port-forward (home) | IP detection, endpoint updates |
 
 ---

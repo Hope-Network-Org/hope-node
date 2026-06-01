@@ -59,18 +59,21 @@ chmod +x peer.sh scripts/*.sh
 ./peer.sh status
 ```
 
-### Option B — docker run only
+### Option B — docker run only (zero-config)
 
 ```bash
 docker run -d --name hope-peer --restart unless-stopped \
   -p 26656:26656 -p 26657:26657 \
   -v hope-peer-data:/home/hope/.hope \
+  -e FORCE_STATE_SYNC=true \
+  -e STATE_SYNC=true \
+  -e STATE_SYNC_RPC=3.21.91.67:26657 \
   -e HOPE_OPERATOR_MNEMONIC="your twenty four words" \
   -e NODE_LABEL=vps-us-east-1 \
   public.ecr.aws/r8k0t0l9/hope-peer:testnet
 ```
 
-Public IP is auto-detected on EC2 and most cloud providers.
+Public IP is auto-detected on EC2 and most cloud providers. Mnemonic enables claim → register → sync-proof automation with no extra env vars.
 
 ---
 
@@ -78,8 +81,9 @@ Public IP is auto-detected on EC2 and most cloud providers.
 
 1. Launch **t3.small** (or larger), **40 GB** gp3
 2. Security group: TCP 26656, 26657 from anywhere
-3. SSH in, install Docker, run compose or `docker run`
-4. Check RPC: `http://<PUBLIC_IP>:26657/status`
+3. SSH in, install Docker, run compose or `docker run` (see Option B)
+4. Optional in `.env`: `STATE_SYNC_RPC=3.21.91.67:26657` if state sync stalls
+5. Check RPC: `http://<PUBLIC_IP>:26657/status`
 
 ---
 
