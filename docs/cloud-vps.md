@@ -47,19 +47,9 @@ Allow inbound:
 
 ## Deploy
 
-### Option A — git + compose (recommended)
+### Option A — docker run only (recommended)
 
-```bash
-git clone https://github.com/Hope-Network-Org/hope-node.git
-cd hope-node
-cp .env.example .env
-# Edit: HOPE_OPERATOR_MNEMONIC, NODE_LABEL
-chmod +x peer.sh scripts/*.sh
-./peer.sh up
-./peer.sh status
-```
-
-### Option B — docker run only (zero-config)
+No git clone. Install Docker, then:
 
 ```bash
 docker run -d --name hope-peer --restart unless-stopped \
@@ -73,7 +63,19 @@ docker run -d --name hope-peer --restart unless-stopped \
   public.ecr.aws/r8k0t0l9/hope-peer:testnet
 ```
 
-Public IP is auto-detected on EC2 and most cloud providers. Mnemonic enables claim → register → sync-proof automation with no extra env vars.
+Public IP is auto-detected on EC2 and most cloud providers. Mnemonic enables claim → register → sync-proof automation.
+
+### Option B — git + compose
+
+```bash
+git clone https://github.com/Hope-Network-Org/hope-node.git
+cd hope-node
+cp .env.example .env
+# Edit: HOPE_OPERATOR_MNEMONIC, NODE_LABEL
+chmod +x peer.sh scripts/*.sh
+./peer.sh up
+./peer.sh status
+```
 
 ---
 

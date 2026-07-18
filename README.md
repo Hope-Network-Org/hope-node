@@ -6,9 +6,9 @@
 
 # Hope Node
 
-Run a node on the **Hope Network testnet** — help the network stay in sync, and optionally **earn rewards** for keeping your node online.
+Run a node on the **Hope Network testnet** — stay in sync with the network, and optionally **earn rewards**.
 
-**New here?** You do not need to be a developer. If you can install [Docker](https://docs.docker.com/get-docker/) and follow a short setup guide, you can run a node.
+You do **not** need to clone this repo. Install [Docker](https://docs.docker.com/get-docker/), then run the public image.
 
 ---
 
@@ -19,91 +19,120 @@ Run a node on the **Hope Network testnet** — help the network stay in sync, an
 | **Hope Network** | [hopenetwork.io](https://hopenetwork.io/) |
 | **Explorer** | [explorer.hopenetwork.io](https://explorer.hopenetwork.io/) |
 | **See all registered nodes** | [Network analytics](https://explorer.hopenetwork.io/analytics/network) |
+| **Managed hosting** | [NerdNode — Hope](https://www.nerdnode.io/service/137) |
 | **Testnet RPC** | [test-gateway.hopenetwork.io/rpc](https://test-gateway.hopenetwork.io/rpc) |
-| **Testnet API** | [test-gateway.hopenetwork.io/api](https://test-gateway.hopenetwork.io/api) |
+
+---
+
+## Quick start (Docker only)
+
+### 1. Install Docker
+
+- [Docker Desktop](https://docs.docker.com/get-docker/) (Mac / Windows / Linux), **or**
+- On a Linux VPS: `curl -fsSL https://get.docker.com | sh`
+
+### 2. Run the node
+
+**Peer only** (no wallet, just support the network):
+
+```bash
+docker run -d --name hope-peer --restart unless-stopped \
+  -p 26656:26656 -p 26657:26657 \
+  -v hope-peer-data:/home/hope/.hope \
+  public.ecr.aws/r8k0t0l9/hope-peer:testnet
+```
+
+**Peer + incentives** (earn rewards — needs a 24-word recovery phrase):
+
+```bash
+docker run -d --name hope-peer --restart unless-stopped \
+  -p 26656:26656 -p 26657:26657 \
+  -v hope-peer-data:/home/hope/.hope \
+  -e FORCE_STATE_SYNC=true \
+  -e STATE_SYNC=true \
+  -e STATE_SYNC_RPC=3.21.91.67:26657 \
+  -e HOPE_OPERATOR_MNEMONIC="your twenty four words here" \
+  -e NODE_LABEL=my-hope-peer \
+  public.ecr.aws/r8k0t0l9/hope-peer:testnet
+```
+
+First sync usually takes ~5–15 minutes. Chain data is kept in the Docker volume `hope-peer-data` across restarts.
+
+### 3. Check status
+
+```bash
+docker exec hope-peer /usr/local/bin/peer-incentives-status.sh
+```
+
+Or peer health only:
+
+```bash
+docker exec hope-peer curl -sf http://127.0.0.1:26657/status | head
+```
+
+Useful commands:
+
+```bash
+docker logs -f hope-peer          # follow logs
+docker restart hope-peer          # restart (keeps data)
+docker pull public.ecr.aws/r8k0t0l9/hope-peer:testnet && \
+  docker rm -f hope-peer          # then re-run the docker run command above to upgrade
+```
+
+---
+
+## Two modes
+
+| Mode | What you need | What you get |
+|------|---------------|--------------|
+| **Peer only** | Docker | Help the network stay synced |
+| **Peer + incentives** | Docker + 24-word phrase + public ports | Daily rewards when eligible |
+
+For incentives on current testnet: stay synced, submit **sync proofs ~every 2 hours** (automatic when mnemonic is set), and stay reachable on the public internet.
+
+- **Home Wi‑Fi?** Forward TCP **26656** and **26657**. [Port guide →](docs/port-forwarding.md)
+- **Cloud VPS?** Usually easiest for rewards. [Cloud guide →](docs/cloud-vps.md)
+- **Prefer managed hardware?** [NerdNode](https://www.nerdnode.io/service/137)
+
+---
+
+## Optional: clone this repo
+
+Only if you want helper scripts (`./peer.sh`), compose, or local docs checkout:
+
+```bash
+git clone https://github.com/Hope-Network-Org/hope-node.git
+cd hope-node
+cp .env.example .env
+chmod +x peer.sh
+./peer.sh up
+```
+
+Same Docker image either way: `public.ecr.aws/r8k0t0l9/hope-peer:testnet`
 
 ---
 
 ## Desktop apps *(coming soon)*
 
-Easy install apps for **macOS** and **Windows** are on the way — no terminal required.
-
-Until then, use the Docker setup in this repo. [Learn more →](docs/applications.md)
-
----
-
-## Two ways to run a node
-
-### 1. Peer node (support the network)
-
-Your computer downloads and stays up to date with the chain. No wallet or passphrase needed.
-
-### 2. Peer node + incentives (earn rewards)
-
-Same as above, plus you register on-chain and can qualify for **daily token rewards** if your node stays synced, submits **sync proofs every ~2 hours**, and remains reachable on the public internet.
-
-You will need a **24-word recovery phrase** (a standard crypto wallet phrase). The setup handles registration and sync proofs for you once the node is synced — no heartbeat transactions on current testnet.
-
-**Running from home?** You may need to open two ports on your router so the network can reach your node. [Port forwarding guide →](docs/port-forwarding.md)
-
-**Running on a cloud server (VPS)?** That is often the easiest path for rewards. [Cloud setup guide →](docs/cloud-vps.md)
-
----
-
-## Get started
-
-1. Install [Docker](https://docs.docker.com/get-docker/)
-2. Download this repo and open a terminal in the folder:
-
-   ```bash
-   git clone https://github.com/Hope-Network-Org/hope-node.git
-   cd hope-node
-   cp .env.example .env
-   chmod +x peer.sh
-   ```
-
-3. **Peer only** — start the node:
-
-   ```bash
-   ./peer.sh up
-   ```
-
-   **With incentives** — add your 24-word phrase to `.env`, then start:
-
-   ```bash
-   # Edit .env and set HOPE_OPERATOR_MNEMONIC="word1 word2 ... word24"
-   ./peer.sh up
-   ```
-
-4. Check progress:
-
-   ```bash
-   ./peer.sh status
-   ```
-
-Step-by-step walkthrough: [docs/quick-start.md](docs/quick-start.md)
+macOS / Windows installers are on the way. Until then, use Docker above. [Learn more →](docs/applications.md)
 
 ---
 
 ## Documentation
 
-Technical details, troubleshooting, and advanced options live in the [docs](docs/) folder:
-
-- [Quick start](docs/quick-start.md) — full first-time setup
-- [Incentives](docs/incentives.md) — how rewards work
-- [Requirements](docs/requirements.md) — computer and network needs
-- [Port forwarding](docs/port-forwarding.md) — home Wi‑Fi setup
-- [Cloud / VPS](docs/cloud-vps.md) — run on a server
-- [Troubleshooting](docs/troubleshooting.md) — when something goes wrong
+- [Quick start](docs/quick-start.md)
+- [Incentives](docs/incentives.md)
+- [Requirements](docs/requirements.md)
+- [Port forwarding](docs/port-forwarding.md)
+- [Cloud / VPS](docs/cloud-vps.md)
+- [Troubleshooting](docs/troubleshooting.md)
 - [All docs →](docs/README.md)
 
 ---
 
 ## Keep your phrase safe
 
-If you use incentives, your `.env` file contains your 24-word phrase. **Never share it** or commit it to git. Treat it like a wallet password.
-
-More detail: [docs/incentives.md](docs/incentives.md)
+If you set `HOPE_OPERATOR_MNEMONIC`, treat it like a wallet password. **Never share it** or put it in a public place.
 
 ---
 

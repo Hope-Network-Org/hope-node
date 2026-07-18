@@ -1,107 +1,12 @@
 # Quick start
 
-## Peer only (5 minutes)
+You only need [Docker](https://docs.docker.com/get-docker/). No git clone required.
 
-```bash
-git clone https://github.com/Hope-Network-Org/hope-node.git
-cd hope-node
-chmod +x peer.sh scripts/*.sh
-cp .env.example .env
-./peer.sh up
-```
-
-Watch sync:
-
-```bash
-./peer.sh logs
-```
-
-Check status:
-
-```bash
-./peer.sh status
-```
-
-When `catching_up: false` and height matches the [gateway](https://test-gateway.hopenetwork.io/rpc/status), you are synced.
+Image: `public.ecr.aws/r8k0t0l9/hope-peer:testnet`
 
 ---
 
-## Peer with incentives (10–20 minutes)
-
-### 1. Prepare mnemonic
-
-Create or import a **24-word BIP-39** phrase. Example format (do not use this phrase):
-
-```
-abandon abandon abandon ... about
-```
-
-### 2. Configure
-
-```bash
-cp .env.example .env
-```
-
-Edit `.env`:
-
-```bash
-HOPE_OPERATOR_MNEMONIC="your twenty four words here"
-NODE_LABEL=my-home-peer
-# Optional: send rewards elsewhere
-# PAYOUT_RECIPIENT=hope1...
-```
-
-### 3. Start
-
-```bash
-./peer.sh up
-./peer.sh logs
-```
-
-The container will:
-
-1. State-sync to chain head (~5–15 min first boot)
-2. Auto-detect your public IP (VPS/cloud)
-3. Claim peer grant (gas sponsored)
-4. Register on-chain
-5. Submit sync proofs every **2 hours** (no heartbeat txs on testnet)
-
-### 4. Verify
-
-```bash
-./peer.sh status
-```
-
-Look for:
-
-- `AUTO_REGISTER_INCENTIVES=true (effective)`
-- `AUTO_SYNC_PROOF=true`
-- `Registered on chain`
-- `Operator: hope1...`
-- `Sync-proof hours: N / 11` (ramps over ~24h)
-
-View on explorer: [Network analytics](https://explorer.hopenetwork.io/analytics/network)
-
-### 5. Open ports (for eligibility)
-
-If running at home:
-
-```bash
-./peer.sh ports
-```
-
-Forward TCP **26656** and **26657** on your router, then:
-
-```bash
-./peer.sh restart
-./peer.sh verify
-```
-
----
-
-## Docker run (no git clone)
-
-**Peer only:**
+## Peer only (~5 minutes)
 
 ```bash
 docker run -d --name hope-peer --restart unless-stopped \
@@ -110,7 +15,23 @@ docker run -d --name hope-peer --restart unless-stopped \
   public.ecr.aws/r8k0t0l9/hope-peer:testnet
 ```
 
-**With incentives (zero-config):**
+Watch logs:
+
+```bash
+docker logs -f hope-peer
+```
+
+When height matches the [gateway](https://test-gateway.hopenetwork.io/rpc/status) and `catching_up` is false, you are synced.
+
+---
+
+## Peer with incentives (~10–20 minutes)
+
+### 1. Prepare a 24-word BIP-39 mnemonic
+
+Create or import one in a wallet you control. Do not use example phrases from docs.
+
+### 2. Run with incentives env
 
 ```bash
 docker run -d --name hope-peer --restart unless-stopped \
@@ -119,17 +40,56 @@ docker run -d --name hope-peer --restart unless-stopped \
   -e FORCE_STATE_SYNC=true \
   -e STATE_SYNC=true \
   -e STATE_SYNC_RPC=3.21.91.67:26657 \
-  -e HOPE_OPERATOR_MNEMONIC="your twenty four words" \
-  -e NODE_LABEL=my-peer \
+  -e HOPE_OPERATOR_MNEMONIC="your twenty four words here" \
+  -e NODE_LABEL=my-hope-peer \
   public.ecr.aws/r8k0t0l9/hope-peer:testnet
 ```
 
-Mnemonic alone enables claim → register → sync-proof automation. No heartbeat configuration needed.
+Optional: send rewards to another address with `-e PAYOUT_RECIPIENT=hope1...`
 
-Status inside container:
+The container will:
+
+1. State-sync to chain head (~5–15 min first boot)
+2. Auto-detect public IP (on most VPS / cloud hosts)
+3. Claim peer grant (gas sponsored)
+4. Register on-chain
+5. Submit sync proofs every **~2 hours**
+
+### 3. Verify
 
 ```bash
 docker exec hope-peer /usr/local/bin/peer-incentives-status.sh
+```
+
+Look for registered operator, sync-proof hours, and `catching_up: false`.
+
+View on explorer: [Network analytics](https://explorer.hopenetwork.io/analytics/network)
+
+### 4. Open ports (for eligibility)
+
+If running at home, forward TCP **26656** and **26657**, then:
+
+```bash
+docker restart hope-peer
+docker exec hope-peer /usr/local/bin/check-peer-reachability.sh
+```
+
+See [port-forwarding.md](port-forwarding.md).
+
+---
+
+## Optional: clone + `./peer.sh`
+
+Use the repo if you want compose helpers:
+
+```bash
+git clone https://github.com/Hope-Network-Org/hope-node.git
+cd hope-node
+cp .env.example .env
+chmod +x peer.sh scripts/*.sh
+# Edit .env for incentives if needed
+./peer.sh up
+./peer.sh status
 ```
 
 ---
@@ -138,4 +98,5 @@ docker exec hope-peer /usr/local/bin/peer-incentives-status.sh
 
 - [How it works](how-it-works.md)
 - [Incentives eligibility](incentives.md)
+- [Cloud / VPS](cloud-vps.md)
 - [Troubleshooting](troubleshooting.md)
