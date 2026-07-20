@@ -141,18 +141,27 @@ aws ecr-public get-login-password --region us-east-1 | \
 
 ## Apple Silicon issues
 
-Add to `.env`:
+The published image includes native **arm64**. Leave `DOCKER_PLATFORM` empty (or remove it from `.env`).
+
+If you previously forced amd64 and see `auth failure` / `chacha20poly1305` / stuck at height 0:
 
 ```bash
-DOCKER_PLATFORM=linux/amd64
+# Remove DOCKER_PLATFORM=linux/amd64 from .env if present
+docker pull --platform linux/arm64 public.ecr.aws/r8k0t0l9/hope-peer:testnet
+docker rm -f hope-peer
+# Re-run your usual docker run / ./peer.sh up (keep the volume unless you need a fresh state sync)
 ```
 
-Pull explicitly:
+Confirm the running container is native: `docker exec hope-peer uname -m` → `aarch64`.
+
+### ECR pull returns 403
+
+Stale `docker login` to Public ECR can break anonymous pulls:
 
 ```bash
-docker pull --platform linux/amd64 public.ecr.aws/r8k0t0l9/hope-peer:testnet
+docker logout public.ecr.aws
+docker pull public.ecr.aws/r8k0t0l9/hope-peer:testnet
 ```
-
 ---
 
 ## Wipe and start over

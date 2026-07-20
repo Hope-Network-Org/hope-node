@@ -8,20 +8,17 @@
 | **Docker Compose** | v2 (plugin) | Included with Docker Desktop |
 | **curl** & **jq** | any recent | For `./peer.sh status` on the host (optional) |
 
-### Apple Silicon (M1/M2/M3 Mac)
+### Apple Silicon (M1/M2/M3/M4 Mac)
 
-The published testnet image is **linux/amd64**. Docker Desktop runs it via emulation automatically. For compose, add to `.env`:
+The published testnet image is **multi-arch** (`linux/amd64` + `linux/arm64`). Docker Desktop pulls the native **arm64** image automatically.
 
-```bash
-DOCKER_PLATFORM=linux/amd64
-```
-
-Or pull explicitly:
+Leave `DOCKER_PLATFORM` unset. Do **not** force `linux/amd64` — emulation (Rosetta) can break P2P handshakes (`SecretConnection` / auth failures).
 
 ```bash
-docker pull --platform linux/amd64 public.ecr.aws/r8k0t0l9/hope-peer:testnet
+docker pull public.ecr.aws/r8k0t0l9/hope-peer:testnet
+# Confirm native: docker run --rm --entrypoint uname public.ecr.aws/r8k0t0l9/hope-peer:testnet -m
+# Expect: aarch64
 ```
-
 ---
 
 ## Hardware

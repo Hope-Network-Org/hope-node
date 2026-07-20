@@ -8,7 +8,22 @@
 
 Run a node on the **Hope Network testnet** — stay in sync with the network, and optionally **earn rewards**.
 
-You do **not** need to clone this repo. Install [Docker](https://docs.docker.com/get-docker/), then run the public image.
+---
+
+## Easiest way: NerdNode (no setup)
+
+Prefer zero technical work? Deploy a Hope peer on managed hardware in a few clicks — no Docker, ports, or VPS required.
+
+<p align="center">
+  <a href="https://www.nerdnode.io/service/137">
+    <img src="assets/nerdnode-logo.png" alt="NerdNode" width="320">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://www.nerdnode.io/service/137"><strong>Launch a Hope node on NerdNode →</strong></a><br>
+  <sub>Hosted · auto-updated · from $5/month · no install or port forwarding</sub>
+</p>
 
 ---
 
@@ -24,7 +39,9 @@ You do **not** need to clone this repo. Install [Docker](https://docs.docker.com
 
 ---
 
-## Quick start (Docker only)
+## Run it yourself (Docker)
+
+You do **not** need to clone this repo. Install [Docker](https://docs.docker.com/get-docker/), then run the public image (`linux/amd64` and `linux/arm64`).
 
 ### 1. Install Docker
 
@@ -58,6 +75,8 @@ docker run -d --name hope-peer --restart unless-stopped \
 
 First sync usually takes ~5–15 minutes. Chain data is kept in the Docker volume `hope-peer-data` across restarts.
 
+On Apple Silicon, let Docker pick the native **arm64** image (do **not** force `linux/amd64`).
+
 ### 3. Check status
 
 ```bash
@@ -90,9 +109,9 @@ docker pull public.ecr.aws/r8k0t0l9/hope-peer:testnet && \
 
 For incentives on current testnet: stay synced, submit **sync proofs ~every 2 hours** (automatic when mnemonic is set), and stay reachable on the public internet.
 
+- **No setup?** [NerdNode managed hosting →](https://www.nerdnode.io/service/137)
 - **Home Wi‑Fi?** Forward TCP **26656** and **26657**. [Port guide →](docs/port-forwarding.md)
-- **Cloud VPS?** Usually easiest for rewards. [Cloud guide →](docs/cloud-vps.md)
-- **Prefer managed hardware?** [NerdNode](https://www.nerdnode.io/service/137)
+- **Cloud VPS?** Usually easiest for self-hosted rewards. [Cloud guide →](docs/cloud-vps.md)
 
 ---
 
@@ -114,7 +133,7 @@ Same Docker image either way: `public.ecr.aws/r8k0t0l9/hope-peer:testnet`
 
 ## Desktop apps *(coming soon)*
 
-macOS / Windows installers are on the way. Until then, use Docker above. [Learn more →](docs/applications.md)
+macOS / Windows installers are on the way. Until then, use NerdNode or Docker above. [Learn more →](docs/applications.md)
 
 ---
 
@@ -136,4 +155,4 @@ If you set `HOPE_OPERATOR_MNEMONIC`, treat it like a wallet password. **Never sh
 
 ---
 
-[Hope Network](https://hopenetwork.io/) · [Explorer](https://explorer.hopenetwork.io/)
+[Hope Network](https://hopenetwork.io/) · [Explorer](https://explorer.hopenetwork.io/) · [NerdNode](https://www.nerdnode.io/service/137)

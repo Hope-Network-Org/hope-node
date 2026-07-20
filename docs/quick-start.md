@@ -1,8 +1,12 @@
 # Quick start
 
+**Easiest (no Docker):** [Launch on NerdNode →](https://www.nerdnode.io/service/137) — managed hosting, no install or port forwarding.
+
+---
+
 You only need [Docker](https://docs.docker.com/get-docker/). No git clone required.
 
-Image: `public.ecr.aws/r8k0t0l9/hope-peer:testnet`
+Image: `public.ecr.aws/r8k0t0l9/hope-peer:testnet` (multi-arch: `linux/amd64` + `linux/arm64`)
 
 ---
 

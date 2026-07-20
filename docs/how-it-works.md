@@ -36,7 +36,7 @@ The published Docker image bundles a `hoped` binary matched to testnet validator
 
 1. **Init** — create `config.toml`, node key, operator keyring (if mnemonic provided)
 2. **Genesis** — fetch from URL in chain metadata; reset local DB if genesis changed
-3. **Peers** — load seeds + persistent peers from chain.json (validator fallback if seed P2P is slow)
+3. **Peers** — load seeds + persistent peers from chain.json (validators for stable links; seed_mode seeds are discovery-only and must not be persistent_peers)
 4. **State sync** — snapshot via `STATE_SYNC_RPC` host:port (default gateway `3.21.91.67:26657`)
 5. **Public IP** — auto-detect via cloud metadata or ipify (when `AUTO_DETECT_EXTERNAL_ADDRESS=true`)
 6. **Start hoped** — block sync / live sync to head

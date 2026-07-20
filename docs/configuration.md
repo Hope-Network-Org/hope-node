@@ -7,7 +7,7 @@ Environment variables for `docker-compose.yml` / `.env`.
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `HOPE_PEER_IMAGE` | `public.ecr.aws/r8k0t0l9/hope-peer:testnet` | Docker image |
-| `DOCKER_PLATFORM` | *(empty)* | Set `linux/amd64` on Apple Silicon |
+| `DOCKER_PLATFORM` | *(empty)* | Leave empty. Image is multi-arch; do **not** force `linux/amd64` on Apple Silicon |
 
 ---
 
@@ -96,13 +96,11 @@ MONIKER=my-peer
 
 ```bash
 HOPE_PEER_IMAGE=public.ecr.aws/r8k0t0l9/hope-peer:testnet
-DOCKER_PLATFORM=linux/amd64
 HOPE_OPERATOR_MNEMONIC="..."
 NODE_LABEL=home-office-peer
 EXTERNAL_ADDRESS=203.0.113.10:26656
 RPC_URL=http://203.0.113.10:26657
 ```
-
 **VPS incentives (minimal):**
 
 ```bash

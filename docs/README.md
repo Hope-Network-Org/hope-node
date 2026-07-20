@@ -2,6 +2,8 @@
 
 Guides for running a Hope testnet peer with Docker.
 
+**No technical setup?** [Deploy on NerdNode →](https://www.nerdnode.io/service/137)
+
 ## Getting started
 
 1. [Requirements](requirements.md) — what you need before installing
@@ -24,6 +26,7 @@ Guides for running a Hope testnet peer with Docker.
 
 ## External links
 
+- [NerdNode — Hope peer hosting](https://www.nerdnode.io/service/137)
 - [Hope Network](https://hopenetwork.io/)
 - [Explorer](https://explorer.hopenetwork.io/)
 - [Network analytics](https://explorer.hopenetwork.io/analytics/network)
