@@ -23,7 +23,17 @@ Optional cold wallet for payouts:
 PAYOUT_RECIPIENT=hope1yourcoldwallet...
 ```
 
-If `PAYOUT_RECIPIENT` differs from the operator address, authorize once from the cold wallet (outside Docker):
+If `PAYOUT_RECIPIENT` differs from the operator address, authorize once from the cold wallet.
+
+### Option A — Hope Wallet QR (recommended for NerdNode)
+
+Use the drop-in module [`@hope/nerdnode-payout`](../../packages/hope-nerdnode-payout/README.md) (also mirrored under [`nerdnode-payout/`](../nerdnode-payout/README.md)):
+
+1. Show QR for `MsgAuthorizeOperator` (signed by the **payout** wallet in Hope Wallet)
+2. Poll `GET /hope/incentives/v1/operator_authorizations/{payout}` until the operator appears
+3. On the host, run `update-node --payout-recipient …` (and optional `bank send`)
+
+### Option B — CLI
 
 ```bash
 hoped tx incentives authorize-operator <operator_hope1> \
@@ -32,6 +42,21 @@ hoped tx incentives authorize-operator <operator_hope1> \
   --node https://test-gateway.hopenetwork.io/rpc/ \
   --sign-mode pq-direct
 ```
+
+Changing `.env` alone does **not** update an already-registered node. After authorize, update on-chain:
+
+```bash
+docker exec hope-peer hoped tx incentives update-node "" \
+  --payout-recipient hope1yourcoldwallet... \
+  --from operator \
+  --home /home/hope/.hope \
+  --keyring-backend test \
+  --chain-id hope-testnet-2 \
+  --sign-mode pq-direct \
+  -y
+```
+
+Optional: move existing operator balances to the new payout wallet with `hoped tx bank send` (see the NerdNode module README).
 
 ---
 
