@@ -1,4 +1,4 @@
-# `@hope/nerdnode-payout`
+# `@hope/wallet-authorization`
 
 Drop-in module for **NerdNode** (or any host panel) to change a Hope peer’s payout wallet with Hope Wallet QR — no CLI for the cold-wallet authorize step.
 
@@ -17,7 +17,7 @@ Drop-in module for **NerdNode** (or any host panel) to change a Hope peer’s pa
 Copy this folder into your app (or add as a workspace package):
 
 ```text
-packages/hope-nerdnode-payout/
+packages/hope-wallet-authorization/
 ```
 
 ```ts
@@ -25,10 +25,10 @@ import {
   preparePayoutSetup,
   completePayoutAuthorization,
   buildHostFollowUpCommands,
-} from '@hope/nerdnode-payout';
+} from '@hope/wallet-authorization';
 
 // React UI (optional)
-import { AuthorizePayoutPanel } from '@hope/nerdnode-payout/react';
+import { AuthorizePayoutPanel } from '@hope/wallet-authorization/react';
 ```
 
 Requires **Hope Wallet** builds that encode `MsgAuthorizeOperator` (shipped with the matching `@hope/tx` update).
@@ -36,7 +36,7 @@ Requires **Hope Wallet** builds that encode `MsgAuthorizeOperator` (shipped with
 ## React drop-in
 
 ```tsx
-import { AuthorizePayoutPanel } from '@hope/nerdnode-payout/react';
+import { AuthorizePayoutPanel } from '@hope/wallet-authorization/react';
 
 <AuthorizePayoutPanel
   operatorAddress={node.operatorAddress}

@@ -1,5 +1,5 @@
 {
-  "name": "@hope/nerdnode-payout",
+  "name": "@hope/wallet-authorization",
   "version": "0.1.0",
   "private": true,
   "type": "module",

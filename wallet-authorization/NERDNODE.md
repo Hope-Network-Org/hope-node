@@ -3,15 +3,15 @@
 ## 1. Copy this folder
 
 ```text
-nerdnode-payout/   →   your-admin-app/vendor/hope-nerdnode-payout/
+wallet-authorization/   →   your-admin-app/vendor/hope-wallet-authorization/
 ```
 
-Canonical source also lives at `packages/hope-nerdnode-payout` in the Hope monorepo.
+Canonical source also lives at `packages/hope-wallet-authorization` in the Hope monorepo.
 
 ## 2. Drop in the React panel
 
 ```tsx
-import { AuthorizePayoutPanel } from './vendor/hope-nerdnode-payout/src/react/AuthorizePayoutPanel';
+import { AuthorizePayoutPanel } from './vendor/hope-wallet-authorization/src/react/AuthorizePayoutPanel';
 
 <AuthorizePayoutPanel
   operatorAddress={workload.operatorHope1}

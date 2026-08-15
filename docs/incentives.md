@@ -27,7 +27,7 @@ If `PAYOUT_RECIPIENT` differs from the operator address, authorize once from the
 
 ### Option A — Hope Wallet QR (recommended for NerdNode)
 
-Use the drop-in module [`@hope/nerdnode-payout`](../../packages/hope-nerdnode-payout/README.md) (also mirrored under [`nerdnode-payout/`](../nerdnode-payout/README.md)):
+Use the drop-in module [`@hope/wallet-authorization`](../../packages/hope-wallet-authorization/README.md) (also mirrored under [`wallet-authorization/`](../wallet-authorization/README.md)):
 
 1. Show QR for `MsgAuthorizeOperator` (signed by the **payout** wallet in Hope Wallet)
 2. Poll `GET /hope/incentives/v1/operator_authorizations/{payout}` until the operator appears
