@@ -1,5 +1,6 @@
 import { HopeQrImage } from './HopeQrImage';
 import { GetHopeWallet } from './GetHopeWallet';
+import { QR_IMAGE_SIZE } from '../qr';
 
 export function WalletQrShell(props: {
   qrValue: string;
@@ -48,7 +49,7 @@ export function WalletQrShell(props: {
           padding: 12,
         }}
       >
-        <HopeQrImage value={props.qrValue} size={240} alt="Hope Wallet QR" />
+        <HopeQrImage value={props.qrValue} size={QR_IMAGE_SIZE} alt="Hope Wallet QR" />
       </div>
       {props.waiting ? (
         <p style={{ fontSize: 13, color: '#334155' }}>

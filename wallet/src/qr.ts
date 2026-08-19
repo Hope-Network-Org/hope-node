@@ -1,7 +1,16 @@
 import QRCode from 'qrcode';
 
-/** Practical phone-camera limit for reliable Hope Wallet scans. */
-export const MAX_QR_CHARS = 1800;
+/** Practical phone-camera limit for reliable Hope Wallet scans.
+ *  QR v40 ECC-L can hold ~4296 alphanumeric chars. Raw base64 uses only
+ *  [A-Za-z0-9+/=] so the scanner always gets alphanumeric mode.
+ *  Sign payloads with two staking messages run ~1400–2000 chars encoded.
+ *  We render at 400px so modules are large enough for phone cameras to read
+ *  up to ~2800 chars reliably.
+ */
+export const MAX_QR_CHARS = 2800;
+
+/** px width used when rendering sign/connect QR images. */
+export const QR_IMAGE_SIZE = 400;
 
 export type QrBuildResult =
   | { ok: true; dataUrl: string }
@@ -39,7 +48,7 @@ export async function buildQrDataUrl(
 }
 
 /** Convenience: data URL or null. */
-export async function qrDataUrl(content: string, size = 240): Promise<string | null> {
+export async function qrDataUrl(content: string, size = QR_IMAGE_SIZE): Promise<string | null> {
   const result = await buildQrDataUrl(content, { width: size });
   return result.ok ? result.dataUrl : null;
 }

@@ -4,10 +4,12 @@ import {
   encodeMsgExecuteContract,
   encodeMsgSend,
   encodeMsgUndelegate,
+  encodeMsgUpdateNode,
   encodeMsgVote,
   encodeMsgWithdrawDelegatorReward,
   GovVoteOption,
   TYPE_URL_MSG_AUTHORIZE_OPERATOR,
+  TYPE_URL_MSG_UPDATE_NODE,
 } from '@hope/tx';
 import type { WalletMessage } from '../signPayload';
 
@@ -68,6 +70,11 @@ function bindSigner(msg: WalletMessage, signer: string): WalletMessage {
   ) {
     value.payoutRecipient = signer;
     value.payout_recipient = signer;
+  } else if (
+    typeUrl === TYPE_URL_MSG_UPDATE_NODE ||
+    typeUrl.includes('MsgUpdateNode')
+  ) {
+    value.operator = signer;
   }
   return { typeUrl, value };
 }
@@ -143,6 +150,16 @@ export function encodeWalletMessage(msg: WalletMessage, signerAddress: string): 
       payoutRecipient: readString(v, 'payoutRecipient', 'payout_recipient'),
       operator: readString(v, 'operator', 'operator'),
       label: readString(v, 'label', 'label') || undefined,
+    });
+  }
+
+  if (typeUrl === TYPE_URL_MSG_UPDATE_NODE || typeUrl === '/hope.incentives.v1.MsgUpdateNode') {
+    return encodeMsgUpdateNode({
+      operator: readString(v, 'operator', 'operator'),
+      label: readString(v, 'label', 'label') || undefined,
+      payoutRecipient: readString(v, 'payoutRecipient', 'payout_recipient') || undefined,
+      externalAddress: readString(v, 'externalAddress', 'external_address') || undefined,
+      rpcUrl: readString(v, 'rpcUrl', 'rpc_url') || undefined,
     });
   }
 

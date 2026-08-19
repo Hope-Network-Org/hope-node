@@ -27,6 +27,7 @@ Guides for running a Hope testnet peer with Docker.
 ## External links
 
 - [NerdNode — Hope peer hosting](https://www.nerdnode.io/service/137)
+- [NerdNode: connect Hope Wallet + payout](nerdnode-payout.md)
 - [Hope Network](https://hopenetwork.io/)
 - [Explorer](https://explorer.hopenetwork.io/)
 - [Network analytics](https://explorer.hopenetwork.io/analytics/network)

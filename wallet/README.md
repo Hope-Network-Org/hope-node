@@ -146,7 +146,7 @@ Install peers for this path: `@hope/pq` and `@hope/tx` (Hope’s ML-DSA packages
 - `relay_url` must be the same origin as the app; wallet rejects mismatches.
 - Addresses are Bech32-checked (`hope1…`).
 - Connect and sign payloads cannot be confused (`session_id` vs `preview`).
-- QR payload cap is 1800 chars; oversized sign requests keep Open Hope Wallet.
+- QR payload cap is 2800 chars (rendered at 400 px for reliable camera decode); oversized sign requests keep Open Hope Wallet.
 - Do not log mnemonics. Do not import `./node` from frontend bundles.
 
 ## Defaults

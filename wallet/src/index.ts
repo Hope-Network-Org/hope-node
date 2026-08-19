@@ -38,7 +38,7 @@ export {
   isSignPayloadExpired,
 } from './signPayload';
 
-export { MAX_QR_CHARS, type QrBuildResult, buildQrDataUrl, qrDataUrl } from './qr';
+export { MAX_QR_CHARS, QR_IMAGE_SIZE, type QrBuildResult, buildQrDataUrl, qrDataUrl } from './qr';
 
 export {
   type WalletVerifyStatus,

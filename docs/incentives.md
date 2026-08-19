@@ -25,15 +25,7 @@ PAYOUT_RECIPIENT=hope1yourcoldwallet...
 
 If `PAYOUT_RECIPIENT` differs from the operator address, authorize once from the cold wallet.
 
-### Option A — Hope Wallet QR (recommended for NerdNode)
-
-Use the drop-in module [`@hope/wallet-authorization`](../../packages/hope-wallet-authorization/README.md) (also mirrored under [`wallet-authorization/`](../wallet-authorization/README.md)):
-
-1. Show QR for `MsgAuthorizeOperator` (signed by the **payout** wallet in Hope Wallet)
-2. Poll `GET /hope/incentives/v1/operator_authorizations/{payout}` until the operator appears
-3. On the host, run `update-node --payout-recipient …` (and optional `bank send`)
-
-### Option B — CLI
+Authorize from the payout key with the CLI:
 
 ```bash
 hoped tx incentives authorize-operator <operator_hope1> \
@@ -56,7 +48,7 @@ docker exec hope-peer hoped tx incentives update-node "" \
   -y
 ```
 
-Optional: move existing operator balances to the new payout wallet with `hoped tx bank send` (see the NerdNode module README).
+Optional: move existing operator balances to the new payout wallet — see [wallet/docs/hosted-nodes.md](../wallet/docs/hosted-nodes.md) (`@hopenetwork/wallet`).
 
 ---
 
