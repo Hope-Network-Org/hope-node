@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { buildQrDataUrl } from '../qr';
+import { useEffect, useMemo, useState } from 'react';
+import { buildQrDataUrl, qrDisplaySize } from '../qr';
 
 export type HopeQrImageProps = {
   value: string;
@@ -17,6 +17,7 @@ export function HopeQrImage({
 }: HopeQrImageProps) {
   const [src, setSrc] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const displaySize = useMemo(() => qrDisplaySize(value, size), [value, size]);
 
   useEffect(() => {
     if (!value) {
@@ -27,7 +28,7 @@ export function HopeQrImage({
     let cancelled = false;
     setSrc(null);
     setError(null);
-    void buildQrDataUrl(value, { width: size }).then((result) => {
+    void buildQrDataUrl(value, { width: displaySize }).then((result) => {
       if (cancelled) return;
       if (result.ok) setSrc(result.dataUrl);
       else setError(result.error);
@@ -35,7 +36,16 @@ export function HopeQrImage({
     return () => {
       cancelled = true;
     };
-  }, [value, size]);
+  }, [value, displaySize]);
+
+  const frameStyle = {
+    width: '100%',
+    maxWidth: displaySize,
+    aspectRatio: '1 / 1' as const,
+    lineHeight: 0,
+    overflow: 'hidden' as const,
+    margin: '0 auto',
+  };
 
   if (!value) return null;
   if (error) {
@@ -43,8 +53,7 @@ export function HopeQrImage({
       <div
         className={className}
         style={{
-          width: size,
-          height: size,
+          ...frameStyle,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -63,19 +72,24 @@ export function HopeQrImage({
     return (
       <div
         className={className}
-        style={{ width: size, height: size, background: '#f8fafc', borderRadius: 8 }}
+        style={{ ...frameStyle, background: '#f8fafc', borderRadius: 8 }}
         aria-hidden
       />
     );
   }
   return (
-    <img
-      src={src}
-      width={size}
-      height={size}
-      alt={alt}
-      className={className}
-    />
+    <div className={className} style={frameStyle}>
+      <img
+        src={src}
+        alt={alt}
+        style={{
+          display: 'block',
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+        }}
+      />
+    </div>
   );
 }
 

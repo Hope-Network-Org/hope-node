@@ -1,6 +1,6 @@
 {
   "name": "@hopenetwork/wallet",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "type": "module",
   "license": "MIT",
   "description": "Hope Wallet SDK: connect, message QR, and PQ mnemonic sign+broadcast.",
@@ -37,7 +37,7 @@
   "scripts": {
     "build": "tsup",
     "prepack": "npm run build",
-    "test": "npx tsx src/protocol.test.ts && npx tsx src/connect.test.ts && npx tsx src/node/encode.test.ts"
+    "test": "npx tsx src/protocol.test.ts && npx tsx src/connect.test.ts && npx tsx src/qr.test.ts && npx tsx src/node/encode.test.ts"
   },
   "publishConfig": {
     "access": "public"

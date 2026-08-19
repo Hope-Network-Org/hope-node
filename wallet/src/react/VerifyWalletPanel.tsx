@@ -86,7 +86,10 @@ export function VerifyWalletPanel({
         borderRadius: 16,
         padding: 20,
         background: '#fffef9',
-        maxWidth: 440,
+        maxWidth: 520,
+        width: '100%',
+        boxSizing: 'border-box',
+        overflow: 'hidden',
       }}
     >
       <p
