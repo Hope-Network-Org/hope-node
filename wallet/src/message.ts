@@ -1,8 +1,10 @@
 import { assertHopeAccountAddress } from './address';
 import {
+  isHopeWalletBridgeAvailable,
   isHopeWalletInApp,
   openHopeWalletDeepLink,
   requestMobileSign,
+  waitForHopeWalletBridge,
 } from './inApp';
 import { qrDataUrl } from './qr';
 import {
@@ -80,16 +82,22 @@ export async function message(params: {
   params.onSession?.(session);
 
   if (isHopeWalletInApp()) {
-    openHopeWalletDeepLink(session.deepLink);
-    try {
-      const { txhash } = await requestMobileSign(session.encoded);
-      if (!txhash?.trim()) {
-        throw new Error('Hope Wallet did not return a transaction hash');
-      }
-      return { mode: 'in-app', txhash: txhash.trim(), session };
-    } catch {
-      return { mode: 'qr', session };
+    if (!isHopeWalletBridgeAvailable()) {
+      await waitForHopeWalletBridge();
     }
+    if (isHopeWalletBridgeAvailable()) {
+      try {
+        const { txhash } = await requestMobileSign(session.encoded);
+        if (!txhash?.trim()) {
+          throw new Error('Hope Wallet did not return a transaction hash');
+        }
+        return { mode: 'in-app', txhash: txhash.trim(), session };
+      } catch {
+        return { mode: 'qr', session };
+      }
+    }
+    openHopeWalletDeepLink(session.deepLink);
+    return { mode: 'qr', session };
   }
 
   // Desktop/mobile web: show the QR. Auto-opening hopewallet:// backgrounds

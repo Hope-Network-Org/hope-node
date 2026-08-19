@@ -1,8 +1,10 @@
 import { assertHopeAccountAddress } from './address';
 import {
+  isHopeWalletBridgeAvailable,
   isHopeWalletInApp,
   openHopeWalletDeepLink,
   requestMobileConnect,
+  waitForHopeWalletBridge,
 } from './inApp';
 import {
   beginWalletVerification,
@@ -91,22 +93,31 @@ function startFlight(params: ConnectParams): Flight {
       return next;
     };
 
-    if (shouldAutoOpen(params.autoOpen)) {
-      openHopeWalletDeepLink(session.deepLink);
+    if (isHopeWalletInApp()) {
+      if (!isHopeWalletBridgeAvailable()) {
+        await waitForHopeWalletBridge();
+      }
+      if (isHopeWalletBridgeAvailable()) {
+        try {
+          const result = await requestMobileConnect(encodeConnectPayload(session.payload));
+          return finish({
+            sessionId: session.payload.session_id,
+            address: assertHopeAccountAddress(result.address),
+            pubkeyBase64: result.pubkeyBase64,
+            accountLabel: result.accountLabel,
+          });
+        } catch {
+          /* declined or bridge error — fall through to deep link + poll */
+        }
+      }
+      if (shouldAutoOpen(params.autoOpen)) {
+        openHopeWalletDeepLink(session.deepLink);
+      }
+      return poll;
     }
 
-    if (isHopeWalletInApp()) {
-      try {
-        const result = await requestMobileConnect(encodeConnectPayload(session.payload));
-        return finish({
-          sessionId: session.payload.session_id,
-          address: assertHopeAccountAddress(result.address),
-          pubkeyBase64: result.pubkeyBase64,
-          accountLabel: result.accountLabel,
-        });
-      } catch {
-        /* camera QR / Node deep-link still polling */
-      }
+    if (shouldAutoOpen(params.autoOpen)) {
+      openHopeWalletDeepLink(session.deepLink);
     }
 
     return poll;

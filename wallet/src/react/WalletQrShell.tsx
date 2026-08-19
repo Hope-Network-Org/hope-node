@@ -24,13 +24,6 @@ export function WalletQrShell(props: {
             {props.waitingLabel ?? 'Approve in Hope Wallet…'}
           </p>
         )}
-        {props.deepLink ? (
-          <p style={{ marginTop: 12 }}>
-            <a href={props.deepLink} style={{ fontWeight: 600, color: '#3d6853' }}>
-              {props.openLabel ?? 'Open Hope Wallet'}
-            </a>
-          </p>
-        ) : null}
       </div>
     );
   }

@@ -87,6 +87,8 @@ export {
 
 export {
   isHopeWalletInApp,
+  isHopeWalletBridgeAvailable,
+  waitForHopeWalletBridge,
   getHopeWalletActiveAddress,
   openHopeWalletDeepLink,
   requestMobileConnect,

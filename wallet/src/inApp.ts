@@ -31,6 +31,24 @@ export function isHopeWalletInApp(): boolean {
   );
 }
 
+/** True when the native JS bridge can show the in-app connect/sign sheet. */
+export function isHopeWalletBridgeAvailable(): boolean {
+  if (typeof window === 'undefined') return false;
+  return Boolean(window.HopeWalletMobile?.isAvailable);
+}
+
+/** Bridge inject runs before content load; connect() may race it on first paint. */
+export async function waitForHopeWalletBridge(timeoutMs = 2500): Promise<boolean> {
+  if (isHopeWalletBridgeAvailable()) return true;
+  if (typeof window === 'undefined' || !window.ReactNativeWebView) return false;
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    await new Promise((r) => setTimeout(r, 50));
+    if (isHopeWalletBridgeAvailable()) return true;
+  }
+  return false;
+}
+
 export function getHopeWalletActiveAddress(): string | undefined {
   if (typeof window === 'undefined') return undefined;
   const addr = window.__HOPE_WALLET_ACTIVE_ADDRESS__;
@@ -58,16 +76,16 @@ export async function requestMobileSign(
 }
 
 /**
- * Hand off `hopewallet://` to the OS / in-app intercept (same device, no camera).
+ * Hand off `hopewallet://` to Hope Wallet. In the in-app WebView, posts to the
+ * native bridge (bottom sheet) instead of navigating — `location.assign` can
+ * escape to the OS Linking handler and leave the browser.
  */
 export function openHopeWalletDeepLink(deepLink: string): void {
   if (typeof window === 'undefined' || !deepLink.startsWith('hopewallet://')) return;
-  if (window.__HOPE_WALLET_IN_APP__) {
-    try {
-      window.location.assign(deepLink);
-      return;
-    } catch {
-      window.location.href = deepLink;
+  if (window.__HOPE_WALLET_IN_APP__ || window.ReactNativeWebView) {
+    const postMessage = window.ReactNativeWebView?.postMessage;
+    if (postMessage) {
+      postMessage(JSON.stringify({ type: 'hopewallet_deeplink', url: deepLink }));
       return;
     }
   }
