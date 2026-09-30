@@ -1,94 +1,74 @@
 # Quick start — Linux & macOS
 
-Run a Hope testnet peer with **incentives** on a Linux VPS, Linux desktop, or Mac with Docker.
+Run a Hope testnet peer with **incentives**. **No git clone** — `docker pull` and `docker run` only.
 
-Image: `public.ecr.aws/r8k0t0l9/hope-peer:testnet` — **multi-arch** (`linux/amd64` + `linux/arm64`).
+Image: `public.ecr.aws/r8k0t0l9/hope-peer:testnet` — **multi-arch** (`linux/amd64` + `linux/arm64`)
 
-**Windows:** [Quick start — Windows](quick-start-windows.md) · **Overview:** [quick-start.md](quick-start.md)
+**Windows:** [quick-start-windows.md](quick-start-windows.md) · **Overview:** [quick-start.md](quick-start.md)
 
 ---
 
-## Recommended: clone + `./peer.sh`
+## 1. Install Docker
 
-Works the same on Ubuntu VPS, Debian, Fedora, and macOS (Docker Desktop or Colima).
+- **Linux VPS:** `curl -fsSL https://get.docker.com | sh` — add your user to the `docker` group, then log out/in.
+- **Mac:** [Docker Desktop](https://docs.docker.com/desktop/setup/install/mac-install/) — on Apple Silicon, do **not** force `linux/amd64`; use native **arm64**.
 
-### 1. Install Docker
+Open firewall / security group: **26656** and **26657** inbound for incentives. [cloud-vps.md](cloud-vps.md) · [port-forwarding.md](port-forwarding.md)
 
-- **Linux VPS:** `curl -fsSL https://get.docker.com | sh` then add your user to the `docker` group.
-- **Mac:** [Docker Desktop](https://docs.docker.com/desktop/setup/install/mac-install/) — use **Apple Silicon native** (do **not** set `DOCKER_PLATFORM=linux/amd64`).
+---
 
-### 2. Clone and configure
+## 2. Pull and run (incentives)
+
+```bash
+docker pull public.ecr.aws/r8k0t0l9/hope-peer:testnet
+
+docker run -d --name hope-peer --restart unless-stopped \
+  -p 26656:26656 -p 26657:26657 \
+  -v hope-peer-data:/home/hope/.hope \
+  -e CHAIN_METADATA_URL=https://test-gateway.hopenetwork.io/chain.json \
+  -e STATE_SYNC=true \
+  -e STATE_SYNC_RPC=3.21.91.67:26657 \
+  -e HOPE_OPERATOR_MNEMONIC="your twenty four word bip39 phrase here" \
+  -e NODE_LABEL=my-peer \
+  public.ecr.aws/r8k0t0l9/hope-peer:testnet
+```
+
+Optional: `-e PAYOUT_RECIPIENT=hope1...`
+
+```bash
+docker logs -f hope-peer
+docker exec hope-peer /usr/local/bin/peer-incentives-status.sh
+```
+
+State sync uses `STATE_SYNC_RPC` and trust metadata from [chain.json](https://test-gateway.hopenetwork.io/chain.json). First boot: **5–20 minutes**.
+
+**Peer only:** drop mnemonic and `NODE_LABEL` from the command above.
+
+---
+
+## Docker maintenance
+
+| Task | Command |
+|------|---------|
+| Restart | `docker restart hope-peer` |
+| Upgrade | `docker pull public.ecr.aws/r8k0t0l9/hope-peer:testnet`, remove container, re-run the same `docker run` (volume keeps data) |
+| Stuck at height 0 | [troubleshooting.md](troubleshooting.md) |
+
+Existing synced nodes are unchanged until you pull a new image and recreate the container.
+
+---
+
+## Optional: clone repo + `./peer.sh`
+
+Same image; adds `./peer.sh resync`, compose, and port helpers:
 
 ```bash
 git clone https://github.com/Hope-Network-Org/hope-node.git
 cd hope-node
 cp .env.example .env
 chmod +x peer.sh
+./peer.sh pull && ./peer.sh up
 ```
-
-Edit `.env`:
-
-```bash
-HOPE_OPERATOR_MNEMONIC="your twenty four word bip39 phrase here"
-NODE_LABEL=my-peer
-STATE_SYNC_RPC=3.21.91.67:26657
-# Optional: PAYOUT_RECIPIENT=hope1...
-```
-
-On **Apple Silicon**, leave `DOCKER_PLATFORM` empty so Docker runs the **arm64** image natively.
-
-### 3. Start
-
-```bash
-./peer.sh pull
-./peer.sh up
-./peer.sh logs
-```
-
-State sync uses:
-
-- `STATE_SYNC_RPC` — host:port RPC with snapshots
-- `chain.json` → `state_sync.trust_height` / `trust_hash` — trust point **below** snapshot (fast verification on every OS)
-
-Expect **5–20 minutes** on first boot.
-
-```bash
-./peer.sh status
-```
-
-### 4. Cloud VPS
-
-On AWS, Hetzner, DigitalOcean, etc., public IP auto-detection usually works. Open security group / firewall **26656** and **26657** inbound. Details: [cloud-vps.md](cloud-vps.md).
-
-### 5. Home network
-
-Forward ports **26656** and **26657**. [port-forwarding.md](port-forwarding.md).
-
----
-
-## Peer only (no incentives)
-
-Leave `HOPE_OPERATOR_MNEMONIC` empty in `.env`, then `./peer.sh up`. Or see [peer-node.md](peer-node.md).
-
----
-
-## Maintenance
-
-| Task | Command |
-|------|---------|
-| Upgrade to latest image | `./peer.sh upgrade` |
-| Restart | `./peer.sh restart` |
-| Full re-sync | `./peer.sh resync` |
-| Clean slate | `./peer.sh fresh` |
-
-Existing synced nodes are **not** affected by image updates until you run `upgrade` or `resync`.
-
----
-
-## Troubleshooting
-
-- Stuck at height 0 → [troubleshooting.md](troubleshooting.md)
-- AppHash / trust timeout → pull latest image + `./peer.sh resync` (fixed in current `hope-peer:testnet`)
 
 ---
 

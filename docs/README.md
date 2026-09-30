@@ -7,9 +7,9 @@ Guides for running a Hope testnet peer with Docker.
 ## Getting started
 
 1. [Requirements](requirements.md) — what you need before installing
-2. [Quick start (overview)](quick-start.md) — paths for all platforms
-3. [Quick start — Windows](quick-start-windows.md) — Docker Desktop + incentives
-4. [Quick start — Linux & macOS](quick-start-linux-macos.md) — VPS, Linux desktop, Mac
+2. [Quick start](quick-start.md) — **`docker pull` + `docker run`** (no clone)
+3. [Quick start — Windows](quick-start-windows.md)
+4. [Quick start — Linux & macOS](quick-start-linux-macos.md)
 5. [How it works](how-it-works.md) — architecture and automation
 
 ## Operating a node

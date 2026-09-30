@@ -47,15 +47,17 @@ Allow inbound:
 
 ## Deploy
 
-### Option A — docker run only (recommended)
+### Option A — `docker pull` + `docker run` (recommended)
 
-No git clone. Install Docker, then:
+No git clone:
 
 ```bash
+docker pull public.ecr.aws/r8k0t0l9/hope-peer:testnet
+
 docker run -d --name hope-peer --restart unless-stopped \
   -p 26656:26656 -p 26657:26657 \
   -v hope-peer-data:/home/hope/.hope \
-  -e FORCE_STATE_SYNC=true \
+  -e CHAIN_METADATA_URL=https://test-gateway.hopenetwork.io/chain.json \
   -e STATE_SYNC=true \
   -e STATE_SYNC_RPC=3.21.91.67:26657 \
   -e HOPE_OPERATOR_MNEMONIC="your twenty four words" \
@@ -65,7 +67,9 @@ docker run -d --name hope-peer --restart unless-stopped \
 
 Public IP is auto-detected on EC2 and most cloud providers. Mnemonic enables claim → register → sync-proof automation.
 
-### Option B — git + compose
+Check: `docker exec hope-peer /usr/local/bin/peer-incentives-status.sh`
+
+### Option B — git clone + `./peer.sh` (optional)
 
 ```bash
 git clone https://github.com/Hope-Network-Org/hope-node.git
@@ -83,7 +87,7 @@ chmod +x peer.sh scripts/*.sh
 
 1. Launch **t3.small** (or larger), **40 GB** gp3
 2. Security group: TCP 26656, 26657 from anywhere
-3. SSH in, install Docker, run compose or `docker run` (see Option B)
+3. SSH in, install Docker, run **Option A** (`docker pull` + `docker run`) above
 4. Optional in `.env`: `STATE_SYNC_RPC=3.21.91.67:26657` if state sync stalls
 5. Check RPC: `http://<PUBLIC_IP>:26657/status`
 
@@ -91,11 +95,17 @@ chmod +x peer.sh scripts/*.sh
 
 ## Maintenance
 
+**Docker only:**
+
 ```bash
-./peer.sh upgrade   # Pull latest image + restart
-./peer.sh logs
-./peer.sh verify
+docker pull public.ecr.aws/r8k0t0l9/hope-peer:testnet
+docker stop hope-peer && docker rm hope-peer
+# Re-run the same docker run command (volume hope-peer-data keeps chain data)
+docker logs -f hope-peer
+docker exec hope-peer /usr/local/bin/peer-incentives-status.sh
 ```
+
+**If you cloned the repo:** `./peer.sh upgrade`, `./peer.sh logs`, `./peer.sh verify`
 
 Enable unattended upgrades for the **host OS** separately; the Hope container uses `--restart unless-stopped`.
 

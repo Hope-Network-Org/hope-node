@@ -2,66 +2,22 @@
 
 **Easiest (no Docker):** [Launch on NerdNode →](https://www.nerdnode.io/service/137)
 
-**By platform (incentives + Docker):**
+**No git clone required.** Install [Docker](https://docs.docker.com/get-docker/), `docker pull`, then `docker run`. Same on Windows, Linux, and macOS.
 
-| Platform | Guide |
-|----------|--------|
+| Platform tips | Guide |
+|---------------|--------|
 | **Windows** | [Quick start — Windows](quick-start-windows.md) |
-| **Linux (VPS or desktop)** | [Quick start — Linux & macOS](quick-start-linux-macos.md) |
-| **macOS** | [Quick start — Linux & macOS](quick-start-linux-macos.md) |
+| **Linux / macOS** | [Quick start — Linux & macOS](quick-start-linux-macos.md) |
 
-Image (all platforms): `public.ecr.aws/r8k0t0l9/hope-peer:testnet`
-
-Always **`docker pull`** or **`./peer.sh pull`** before a **new** node so you get the latest state-sync and incentives automation.
+Image: `public.ecr.aws/r8k0t0l9/hope-peer:testnet` (`linux/amd64` + `linux/arm64`)
 
 ---
 
-## Recommended: clone + incentives (~10–20 min)
-
-```bash
-git clone https://github.com/Hope-Network-Org/hope-node.git
-cd hope-node
-cp .env.example .env
-chmod +x peer.sh
-# Edit .env: HOPE_OPERATOR_MNEMONIC, NODE_LABEL, STATE_SYNC_RPC=3.21.91.67:26657
-./peer.sh pull
-./peer.sh up
-./peer.sh status
-```
-
-What happens automatically:
-
-1. State sync from network snapshots (trust height from [chain.json](https://test-gateway.hopenetwork.io/chain.json))
-2. Public IP detection (most VPS / cloud)
-3. Peer grant claim → on-chain registration → sync proofs every ~2 h
-
-See [incentives.md](incentives.md) for eligibility (sync + public P2P/RPC).
-
----
-
-## Peer only (~5 min, no wallet)
-
-Leave `HOPE_OPERATOR_MNEMONIC` empty in `.env`, then `./peer.sh up`.
-
-Or one-shot Docker:
+## Peer + incentives (~10–20 min)
 
 ```bash
 docker pull public.ecr.aws/r8k0t0l9/hope-peer:testnet
-docker run -d --name hope-peer --restart unless-stopped \
-  -p 26656:26656 -p 26657:26657 \
-  -v hope-peer-data:/home/hope/.hope \
-  -e STATE_SYNC_RPC=3.21.91.67:26657 \
-  public.ecr.aws/r8k0t0l9/hope-peer:testnet
-```
 
----
-
-## Single `docker run` (no clone) {#single-docker-run-no-clone}
-
-**Peer + incentives** — replace the mnemonic and label:
-
-```bash
-docker pull public.ecr.aws/r8k0t0l9/hope-peer:testnet
 docker run -d --name hope-peer --restart unless-stopped \
   -p 26656:26656 -p 26657:26657 \
   -v hope-peer-data:/home/hope/.hope \
@@ -73,14 +29,42 @@ docker run -d --name hope-peer --restart unless-stopped \
   public.ecr.aws/r8k0t0l9/hope-peer:testnet
 ```
 
-Use **`FORCE_STATE_SYNC=true`** only when intentionally wiping chain data and re-syncing (same as `./peer.sh resync`), not on a normal first install.
-
-Check status:
+Watch sync and incentives:
 
 ```bash
-docker exec hope-peer /usr/local/bin/peer-incentives-status.sh
 docker logs -f hope-peer
+docker exec hope-peer /usr/local/bin/peer-incentives-status.sh
 ```
+
+The container will state-sync (trust from [chain.json](https://test-gateway.hopenetwork.io/chain.json)), auto-detect public IP on most VPS hosts, claim peer grant, register on-chain, and submit sync proofs every ~2 h. See [incentives.md](incentives.md) for eligibility (sync + public **26656** / **26657**).
+
+Use **`FORCE_STATE_SYNC=true`** only when re-syncing from scratch (wiping block data), not on a normal first install.
+
+---
+
+## Peer only (~5 min, no wallet)
+
+```bash
+docker pull public.ecr.aws/r8k0t0l9/hope-peer:testnet
+
+docker run -d --name hope-peer --restart unless-stopped \
+  -p 26656:26656 -p 26657:26657 \
+  -v hope-peer-data:/home/hope/.hope \
+  -e STATE_SYNC_RPC=3.21.91.67:26657 \
+  public.ecr.aws/r8k0t0l9/hope-peer:testnet
+```
+
+---
+
+## Useful Docker commands
+
+| Task | Command |
+|------|---------|
+| Logs | `docker logs -f hope-peer` |
+| Status | `docker exec hope-peer /usr/local/bin/peer-incentives-status.sh` |
+| Restart (keep data) | `docker restart hope-peer` |
+| Upgrade image | `docker pull public.ecr.aws/r8k0t0l9/hope-peer:testnet` then remove container and run the same `docker run` again (volume keeps chain data) |
+| Stuck at height 0 | [troubleshooting.md](troubleshooting.md) — set `STATE_SYNC_RPC`, remove container, re-run with fresh sync or use clone repo’s `./peer.sh resync` |
 
 ---
 
@@ -89,6 +73,22 @@ docker logs -f hope-peer
 Compare to [gateway status](https://test-gateway.hopenetwork.io/rpc/status): `catching_up` should be `false`.
 
 Explorer: [Network analytics](https://explorer.hopenetwork.io/analytics/network)
+
+---
+
+## Optional: clone repo + `./peer.sh`
+
+Only if you want compose, `./peer.sh status`, `./peer.sh resync`, and port-forward helpers — **not required** to run a node.
+
+```bash
+git clone https://github.com/Hope-Network-Org/hope-node.git
+cd hope-node
+cp .env.example .env
+chmod +x peer.sh
+# Edit .env, then:
+./peer.sh pull
+./peer.sh up
+```
 
 ---
 

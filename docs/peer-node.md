@@ -5,19 +5,15 @@ Run a Hope full node **without** incentives — useful for RPC access, developme
 ## Start
 
 ```bash
-cp .env.example .env
-# Leave HOPE_OPERATOR_MNEMONIC empty
-./peer.sh up
-```
-
-Or with plain Docker:
-
-```bash
+docker pull public.ecr.aws/r8k0t0l9/hope-peer:testnet
 docker run -d --name hope-peer --restart unless-stopped \
   -p 26656:26656 -p 26657:26657 \
   -v hope-peer-data:/home/hope/.hope \
+  -e STATE_SYNC_RPC=3.21.91.67:26657 \
   public.ecr.aws/r8k0t0l9/hope-peer:testnet
 ```
+
+Optional — clone [hope-node](https://github.com/Hope-Network-Org/hope-node), leave `HOPE_OPERATOR_MNEMONIC` empty in `.env`, then `./peer.sh up`.
 
 ## What you get
 

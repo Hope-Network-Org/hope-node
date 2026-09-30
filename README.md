@@ -41,17 +41,9 @@ Prefer zero technical work? Deploy a Hope peer on managed hardware in a few clic
 
 ## Run it yourself (Docker)
 
-You do **not** need to clone this repo. Install [Docker](https://docs.docker.com/get-docker/), then run the public image (`linux/amd64` and `linux/arm64`).
+**You do not need to clone this repo.** Install [Docker](https://docs.docker.com/get-docker/), `docker pull`, then `docker run` — Windows, Linux, and Mac use the same image (`linux/amd64` and `linux/arm64`).
 
-**Step-by-step with incentives:**
-
-| Platform | Guide |
-|----------|--------|
-| Windows | [docs/quick-start-windows.md](docs/quick-start-windows.md) |
-| Linux / macOS | [docs/quick-start-linux-macos.md](docs/quick-start-linux-macos.md) |
-| All platforms (overview) | [docs/quick-start.md](docs/quick-start.md) |
-
-**Recommended:** clone this repo, set `.env`, use `./peer.sh pull` then `./peer.sh up` (same flow on Windows, Linux, and Mac).
+Platform notes: [Windows](docs/quick-start-windows.md) · [Linux & macOS](docs/quick-start-linux-macos.md) · [Quick start](docs/quick-start.md)
 
 ### 1. Install Docker
 
@@ -132,9 +124,9 @@ For incentives on current testnet: stay synced, submit **sync proofs ~every 2 ho
 
 ---
 
-## Optional: clone this repo
+## Optional: clone this repo (helper scripts only)
 
-Only if you want helper scripts (`./peer.sh`), compose, or local docs checkout:
+Same Docker image. Use this if you want `./peer.sh`, compose, or `./peer.sh resync` — **not required** to run a node:
 
 ```bash
 git clone https://github.com/Hope-Network-Org/hope-node.git
