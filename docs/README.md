@@ -7,22 +7,25 @@ Guides for running a Hope testnet peer with Docker.
 ## Getting started
 
 1. [Requirements](requirements.md) — what you need before installing
-2. [Quick start](quick-start.md) — first run in under 10 minutes
-3. [How it works](how-it-works.md) — architecture and automation
+2. [Quick start (overview)](quick-start.md) — paths for all platforms
+3. [Quick start — Windows](quick-start-windows.md) — Docker Desktop + incentives
+4. [Quick start — Linux & macOS](quick-start-linux-macos.md) — VPS, Linux desktop, Mac
+5. [How it works](how-it-works.md) — architecture and automation
 
 ## Operating a node
 
 4. [Peer node](peer-node.md) — sync-only mode
-5. [Incentives](incentives.md) — earn native token rewards
-6. [Configuration](configuration.md) — environment variables
-7. [Commands & tooling](commands-and-tooling.md) — `peer.sh` reference
-8. [Port forwarding](port-forwarding.md) — home network
-9. [Cloud / VPS](cloud-vps.md) — production deployment
-10. [Troubleshooting](troubleshooting.md) — fix common issues
+5. [Public RPC](public-rpc.md) — optional query/broadcast capacity (not validating)
+6. [Incentives](incentives.md) — earn native token rewards
+7. [Configuration](configuration.md) — environment variables
+8. [Commands & tooling](commands-and-tooling.md) — `peer.sh` reference
+9. [Port forwarding](port-forwarding.md) — home network
+10. [Cloud / VPS](cloud-vps.md) — production deployment
+11. [Troubleshooting](troubleshooting.md) — fix common issues
 
 ## Applications
 
-11. [Desktop apps](applications.md) — macOS & Windows *(coming soon)*
+12. [Desktop apps](applications.md) — macOS & Windows *(coming soon)*
 
 ## External links
 

@@ -22,10 +22,13 @@ Environment variables for `docker-compose.yml` / `.env`.
 | `FORCE_STATE_SYNC` | `false` | Wipe block store and state-sync on start |
 | `STATE_SYNC_RPC` | `3.21.91.67:26657` | Host:port RPC with snapshots (not HTTPS `/rpc`) |
 | `STATE_SYNC_RPC_URL` | gateway HTTPS `/rpc` | Used for trust height/hash lookup |
+| `STATE_SYNC_SNAPSHOT_HEIGHT` | *(empty)* | Override snapshot height if logs show a mismatch |
+| `TRUST_HEIGHT` / `TRUST_HASH` | *(from chain.json)* | Manual override; entrypoint uses [chain.json](https://test-gateway.hopenetwork.io/chain.json) `state_sync.trust_*` when set |
+| `STATE_SYNC_TRUST_BEFORE_SNAPSHOT` | `1000` | Blocks below snapshot when computing trust (advanced) |
 | `SEEDS` | *(from chain.json)* | Comma-separated seed nodes |
 | `PERSISTENT_PEERS` | *(from chain.json)* | Persistent validator peers |
 
-State sync needs a reachable **host:port** CometBFT RPC (26657). The HTTPS gateway URL is used for status queries only. If first boot hangs at height 0, set `STATE_SYNC_RPC=3.21.91.67:26657` and run `./peer.sh resync`.
+State sync needs a reachable **host:port** CometBFT RPC (26657). The HTTPS gateway URL is used for status and trust block queries. New peers read **`state_sync`** from `chain.json` so trust height stays **below** the snapshot (Linux, macOS, and Windows use the same image and logic). If first boot hangs at height 0, set `STATE_SYNC_RPC=3.21.91.67:26657` and run `./peer.sh resync`.
 
 Override peers only if directed by Hope Network ops.
 

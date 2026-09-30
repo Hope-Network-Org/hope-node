@@ -10,6 +10,8 @@ services:
     ports:
       - "26656:26656"
       - "26657:26657"
+      # Optional public LCD (see docs/public-rpc.md). Default image already binds 1317 inside the container.
+      # - "1317:1317"
     volumes:
       - hope-peer-data:/home/hope/.hope
     healthcheck:

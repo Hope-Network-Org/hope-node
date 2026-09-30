@@ -43,6 +43,16 @@ Prefer zero technical work? Deploy a Hope peer on managed hardware in a few clic
 
 You do **not** need to clone this repo. Install [Docker](https://docs.docker.com/get-docker/), then run the public image (`linux/amd64` and `linux/arm64`).
 
+**Step-by-step with incentives:**
+
+| Platform | Guide |
+|----------|--------|
+| Windows | [docs/quick-start-windows.md](docs/quick-start-windows.md) |
+| Linux / macOS | [docs/quick-start-linux-macos.md](docs/quick-start-linux-macos.md) |
+| All platforms (overview) | [docs/quick-start.md](docs/quick-start.md) |
+
+**Recommended:** clone this repo, set `.env`, use `./peer.sh pull` then `./peer.sh up` (same flow on Windows, Linux, and Mac).
+
 ### 1. Install Docker
 
 - [Docker Desktop](https://docs.docker.com/get-docker/) (Mac / Windows / Linux), **or**
@@ -50,12 +60,19 @@ You do **not** need to clone this repo. Install [Docker](https://docs.docker.com
 
 ### 2. Run the node
 
+Pull the latest image before a **new** peer:
+
+```bash
+docker pull public.ecr.aws/r8k0t0l9/hope-peer:testnet
+```
+
 **Peer only** (no wallet, just support the network):
 
 ```bash
 docker run -d --name hope-peer --restart unless-stopped \
   -p 26656:26656 -p 26657:26657 \
   -v hope-peer-data:/home/hope/.hope \
+  -e STATE_SYNC_RPC=3.21.91.67:26657 \
   public.ecr.aws/r8k0t0l9/hope-peer:testnet
 ```
 
@@ -65,7 +82,7 @@ docker run -d --name hope-peer --restart unless-stopped \
 docker run -d --name hope-peer --restart unless-stopped \
   -p 26656:26656 -p 26657:26657 \
   -v hope-peer-data:/home/hope/.hope \
-  -e FORCE_STATE_SYNC=true \
+  -e CHAIN_METADATA_URL=https://test-gateway.hopenetwork.io/chain.json \
   -e STATE_SYNC=true \
   -e STATE_SYNC_RPC=3.21.91.67:26657 \
   -e HOPE_OPERATOR_MNEMONIC="your twenty four words here" \
@@ -73,7 +90,7 @@ docker run -d --name hope-peer --restart unless-stopped \
   public.ecr.aws/r8k0t0l9/hope-peer:testnet
 ```
 
-First sync usually takes ~5–15 minutes. Chain data is kept in the Docker volume `hope-peer-data` across restarts.
+First sync usually takes ~5–20 minutes. Trust height for state sync is read from [chain.json](https://test-gateway.hopenetwork.io/chain.json) (`state_sync`) on all platforms — not Windows-specific.
 
 On Apple Silicon, let Docker pick the native **arm64** image (do **not** force `linux/amd64`).
 
@@ -139,7 +156,9 @@ macOS / Windows installers are on the way. Until then, use NerdNode or Docker ab
 
 ## Documentation
 
-- [Quick start](docs/quick-start.md)
+- [Quick start (overview)](docs/quick-start.md)
+- [Quick start — Windows](docs/quick-start-windows.md)
+- [Quick start — Linux & macOS](docs/quick-start-linux-macos.md)
 - [Incentives](docs/incentives.md)
 - [Requirements](docs/requirements.md)
 - [Port forwarding](docs/port-forwarding.md)

@@ -47,6 +47,25 @@ Then:
 ./peer.sh resync
 ```
 
+**State sync fails with `context deadline exceeded` / `Can't verify` / `failed to fetch and verify app hash`:**  
+The default trust height used to be `latest − 2000`. If the newest snapshot on the network is **much older** than that, CometBFT walks backwards one block at a time during verification and often hits a **30s** timeout (Windows and Linux behave the same).
+
+Fix (pick one):
+
+1. **Automatic (current testnet):** Pull latest `hope-peer:testnet` and use current [chain.json](https://test-gateway.hopenetwork.io/chain.json) (`state_sync.trust_*`). Fresh `./peer.sh up` or `./peer.sh resync` — same on Windows, Linux, and Mac.
+2. **Manual in `.env`:** Set trust **below** the snapshot height you see in logs, then resync:
+
+```bash
+# Example: snapshot height 1751600 → trust ~1000 blocks lower
+STATE_SYNC_SNAPSHOT_HEIGHT=1751600
+# or explicit:
+TRUST_HEIGHT=1750600
+TRUST_HASH=<block hash at TRUST_HEIGHT from explorer or rpc/block>
+./peer.sh resync
+```
+
+3. **Older image:** `./peer.sh pull` then `./peer.sh resync`.
+
 P2P timeouts to seed/gateway during first boot are common; RPC state sync still works when `STATE_SYNC_RPC` is set correctly.
 
 ---
