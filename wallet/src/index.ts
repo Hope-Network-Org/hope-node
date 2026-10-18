@@ -99,6 +99,7 @@ export {
   HOPE_WALLET_PLAY_STORE,
   HOPE_WALLET_APP_STORE,
   HOPE_WALLET_IOS_LABEL,
+  HOPE_WALLET_CHROME_EXTENSION,
 } from './stores';
 
 export { assertHopeMnemonic } from './mnemonic';

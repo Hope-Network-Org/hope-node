@@ -1,6 +1,6 @@
 {
   "name": "@hopenetwork/wallet",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "type": "module",
   "license": "MIT",
   "description": "Hope Wallet SDK: connect, message QR, and PQ mnemonic sign+broadcast.",

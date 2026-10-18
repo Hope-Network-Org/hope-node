@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import {
   HOPE_WALLET_APP_STORE,
+  HOPE_WALLET_CHROME_EXTENSION,
   HOPE_WALLET_IOS_LABEL,
   HOPE_WALLET_PLAY_STORE,
 } from '../stores';
@@ -26,9 +27,9 @@ export function GetHopeWallet() {
         Don&apos;t have Hope Wallet?
       </p>
       <p style={{ margin: '4px 0 12px', textAlign: 'center', fontSize: 12, color: '#64748b' }}>
-        Install the app, then scan this QR.
+        Install the app or browser extension, then scan this QR.
       </p>
-      <div style={{ display: 'flex', justifyContent: 'center', gap: 12 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 12 }}>
         {HOPE_WALLET_APP_STORE ? (
           <a href={HOPE_WALLET_APP_STORE} target="_blank" rel="noopener noreferrer" style={linkStyle}>
             iOS
@@ -49,6 +50,15 @@ export function GetHopeWallet() {
           style={linkStyle}
         >
           Android
+        </a>
+        <a
+          href={HOPE_WALLET_CHROME_EXTENSION}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Add Hope Wallet to your browser"
+          style={linkStyle}
+        >
+          Browser
         </a>
       </div>
     </div>

@@ -6,3 +6,7 @@ export const HOPE_WALLET_PLAY_STORE =
 export const HOPE_WALLET_APP_STORE: string | null = null;
 
 export const HOPE_WALLET_IOS_LABEL = 'App Store — coming soon';
+
+/** Chrome Web Store listing (also installable in Brave and other Chromium browsers). */
+export const HOPE_WALLET_CHROME_EXTENSION =
+  'https://chromewebstore.google.com/detail/pmlpjemlompjceeclbafcbbeiapopbdj';
