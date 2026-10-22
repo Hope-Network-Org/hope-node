@@ -31,7 +31,7 @@ Deliver a production-ready managed Hope peer product on {{PANEL_ORIGIN}} that:
 
 ## Canonical documentation (read and follow)
 
-Repository: https://github.com/Hope-Network-Org/hope-node-public
+Repository: https://github.com/Hope-Network-Org/hope-node
 
 - docs/quick-start.md — docker pull/run, ports, mnemonic
 - docs/incentives.md — automation, eligibility, sync proofs
