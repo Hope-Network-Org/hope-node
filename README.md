@@ -34,7 +34,7 @@ Prefer zero technical work? Deploy a Hope peer on managed hardware in a few clic
 | **Hope Network** | [hopenetwork.io](https://hopenetwork.io/) |
 | **Explorer** | [explorer.hopenetwork.io](https://explorer.hopenetwork.io/) |
 | **See all registered nodes** | [Network analytics](https://explorer.hopenetwork.io/analytics/network) |
-| **Managed hosting** | [NerdNode — Hope](https://www.nerdnode.io/service/137) |
+| **Managed hosting** | [Integration guide](docs/managed-hosting/README.md) · [NerdNode — Hope](https://www.nerdnode.io/service/137) |
 | **Testnet RPC** | [test-gateway.hopenetwork.io/rpc](https://test-gateway.hopenetwork.io/rpc) |
 
 ---
@@ -119,6 +119,7 @@ docker pull public.ecr.aws/r8k0t0l9/hope-peer:testnet && \
 For incentives on current testnet: stay synced, submit **sync proofs ~every 2 hours** (automatic when mnemonic is set), and stay reachable on the public internet.
 
 - **No setup?** [NerdNode managed hosting →](https://www.nerdnode.io/service/137)
+- **You host nodes for customers?** [Managed integration guide →](docs/managed-hosting/README.md) · [AI prompt →](docs/managed-hosting/ai-agent-prompt.md)
 - **Home Wi‑Fi?** Forward TCP **26656** and **26657**. [Port guide →](docs/port-forwarding.md)
 - **Cloud VPS?** Usually easiest for self-hosted rewards. [Cloud guide →](docs/cloud-vps.md)
 
@@ -152,6 +153,7 @@ macOS / Windows installers are on the way. Until then, use NerdNode or Docker ab
 - [Quick start — Windows](docs/quick-start-windows.md)
 - [Quick start — Linux & macOS](docs/quick-start-linux-macos.md)
 - [Incentives](docs/incentives.md)
+- [Managed hosting integration](docs/managed-hosting/README.md)
 - [Requirements](docs/requirements.md)
 - [Port forwarding](docs/port-forwarding.md)
 - [Cloud / VPS](docs/cloud-vps.md)

@@ -2,7 +2,8 @@
 
 Guides for running a Hope testnet peer with Docker.
 
-**No technical setup?** [Deploy on NerdNode →](https://www.nerdnode.io/service/137)
+**No technical setup?** [Deploy on NerdNode →](https://www.nerdnode.io/service/137)  
+**Hosting for customers?** [Managed integration](managed-hosting/README.md) · [AI prompt](managed-hosting/ai-agent-prompt.md)
 
 ## Getting started
 
@@ -14,18 +15,24 @@ Guides for running a Hope testnet peer with Docker.
 
 ## Operating a node
 
-4. [Peer node](peer-node.md) — sync-only mode
-5. [Public RPC](public-rpc.md) — optional query/broadcast capacity (not validating)
-6. [Incentives](incentives.md) — earn native token rewards
-7. [Configuration](configuration.md) — environment variables
-8. [Commands & tooling](commands-and-tooling.md) — `peer.sh` reference
-9. [Port forwarding](port-forwarding.md) — home network
-10. [Cloud / VPS](cloud-vps.md) — production deployment
-11. [Troubleshooting](troubleshooting.md) — fix common issues
+6. [Peer node](peer-node.md) — sync-only mode
+7. [Public RPC](public-rpc.md) — optional query/broadcast capacity (not validating)
+8. [Incentives](incentives.md) — earn native token rewards
+9. [Configuration](configuration.md) — environment variables
+10. [Commands & tooling](commands-and-tooling.md) — `peer.sh` reference
+11. [Port forwarding](port-forwarding.md) — home network
+12. [Cloud / VPS](cloud-vps.md) — production deployment
+13. [Troubleshooting](troubleshooting.md) — fix common issues
+14. [Browser relay](browser-relay.md) — volunteer RPC layer (ops / contributors)
 
 ## Applications
 
-12. [Desktop apps](applications.md) — macOS & Windows *(coming soon)*
+15. [Desktop apps](applications.md) — macOS & Windows *(coming soon)*
+
+## Managed hosting integration
+
+16. [Onboarding hub](managed-hosting/README.md) — peer + wallet payout for panels
+17. [AI agent prompt](managed-hosting/ai-agent-prompt.md) — copy-paste for coding agents
 
 ## External links
 

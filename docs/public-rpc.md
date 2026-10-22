@@ -23,7 +23,7 @@ Public listing (refreshed on the gateway):
 curl -s https://test-gateway.hopenetwork.io/rpc-pool.json | jq .
 ```
 
-Healthy peers appear alongside the gateway and seed. Clients prefer the HTTPS gateway; peer RPCs are failover / capacity.
+Healthy peers appear alongside the gateway and seed. Each HTTP peer gets **`browser_urls`** on every public mirror (e.g. `https://test-gateway.hopenetwork.io/rpc/pool/{pool_key}/…` and `https://test-rpc-2.hopenetwork.io/rpc/pool/{pool_key}/…`) with CORS. **`pool_key`** is stable per operator (`op-<bech32>`) or `host-<ip>-<port>` — not the display label. Browsers should use `@hopenetwork/smart-rpc` (`HOPE_TESTNET_SMART_RPC`) for mirror failover; native clients use `url` directly.
 
 ## Optional LCD (REST)
 
